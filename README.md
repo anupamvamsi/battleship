@@ -1,2 +1,2 @@
 # battleship
-Project 17 (TheOdinProject
+Project 17 (TheOdinProject)
