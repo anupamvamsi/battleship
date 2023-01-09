@@ -1,10 +1,15 @@
 const Ship = (len) => {
   const length = len;
   let numHits = 0;
+  // const isSunk = false;
 
   const hit = () => {
-    numHits += 1;
+    if (numHits < length) {
+      numHits += 1;
+    }
   };
+
+  const isSunk = () => numHits === length;
 
   return {
     get length() {
@@ -14,6 +19,7 @@ const Ship = (len) => {
       return numHits;
     },
     hit,
+    isSunk,
   };
 };
 
