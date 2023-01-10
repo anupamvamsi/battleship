@@ -1,7 +1,6 @@
 const Ship = (len) => {
   const length = len;
   let numHits = 0;
-  // const isSunk = false;
 
   const hit = () => {
     if (numHits < length) {
