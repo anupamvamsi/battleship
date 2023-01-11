@@ -18,8 +18,16 @@ const Gameboard = () => {
   _setArrayFalse(placedShipsTracker); // _setShipsTrackerFalse():
   _setArrayFalse(attacksTracker); // _setAttacksTrackerFalse();
 
-  const _checkValidPlace = (oneDArrayIdx) => {
+  const _emptyPlace = (oneDArrayIdx) => {
     if (_placedShips1DIndices.indexOf(oneDArrayIdx) === -1) {
+      return true;
+    }
+    return false;
+  };
+
+  const _validGBSquare = (x, y) => {
+    // console.log(`x: ${x}, y: ${y}`);
+    if (x >= 0 && x < SIZE && y >= 0 && y < SIZE) {
       return true;
     }
     return false;
@@ -37,22 +45,22 @@ const Gameboard = () => {
     let _validCoords = true;
 
     const _tmpPlacedShipsTracker = [];
-    for (let i = 0; i < _limit - _init + 1; i += 1) {
-      if (startX >= SIZE || startY >= SIZE || _endX >= SIZE || _endY >= SIZE) {
-        _validCoords = false;
-        break;
-      }
 
-      const _oneDIdx = orientation
-        ? startX + (startY + i) * SIZE
-        : startX + i + startY * SIZE;
+    if (!_validGBSquare(startX, startY) || !_validGBSquare(_endX, _endY)) {
+      _validCoords = false;
+    } else {
+      for (let i = 0; i < _limit - _init + 1; i += 1) {
+        const _1DIdx = orientation
+          ? startX + (startY + i) * SIZE
+          : startX + i + startY * SIZE;
 
-      if (_checkValidPlace(_oneDIdx)) {
-        placedShipsTracker[_oneDIdx] = true;
-        _tmpPlacedShipsTracker.push(_oneDIdx);
-      } else {
-        _validCoords = false;
-        break;
+        if (_emptyPlace(_1DIdx)) {
+          placedShipsTracker[_1DIdx] = true;
+          _tmpPlacedShipsTracker.push(_1DIdx);
+        } else {
+          _validCoords = false;
+          break;
+        }
       }
     }
 
@@ -72,9 +80,16 @@ const Gameboard = () => {
     }
   };
 
+  const receiveAttack = (x, y) => {
+    attacksTracker[x + y * SIZE] = true;
+  };
+
   return {
     get size() {
       return SIZE;
+    },
+    get ships() {
+      return ships;
     },
     get coordsOfPlacedShips() {
       return coordsOfPlacedShips;
@@ -82,10 +97,11 @@ const Gameboard = () => {
     get placedShipsTracker() {
       return placedShipsTracker;
     },
-    get ships() {
-      return ships;
+    get attacksTracker() {
+      return attacksTracker;
     },
     placeShip,
+    receiveAttack,
   };
 };
 

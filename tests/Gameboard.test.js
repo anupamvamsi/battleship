@@ -19,8 +19,13 @@ test('Place ship at specific coordinates', () => {
   ]);
 });
 
-test('Place ship at invalid coordinates', () => {
+test('Place ship at invalid coordinates 1', () => {
   gb.placeShip(7, 5);
+  expect(gb.coordsOfPlacedShips[0]).toEqual(['Invalid']);
+});
+
+test('Place ship at invalid coordinates 2', () => {
+  gb.placeShip(1, -1);
   expect(gb.coordsOfPlacedShips[0]).toEqual(['Invalid']);
 });
 
@@ -49,7 +54,7 @@ test('Multiple placeShip calls', () => {
   ]);
 });
 
-// test.skip('Does receiveAttack hit a ship?', () => {
-//   gb.receiveAttack([2, 3]);
-//   expect(gb.squares[2 + 3 * gb.size]).toBe(true);
-// });
+test('Does receiveAttack hit a ship?', () => {
+  gb.receiveAttack(2, 3);
+  expect(gb.attacksTracker[2 + 3 * gb.size]).toBe(true);
+});
