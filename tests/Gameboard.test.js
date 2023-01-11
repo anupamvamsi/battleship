@@ -76,7 +76,49 @@ test('Multiple placeShip calls', () => {
   expect(gb.placedShipsTracker[59]).toBe(true); // [3, 7]
 });
 
-test('Does receiveAttack hit a ship?', () => {
-  gb.receiveAttack(2, 3);
-  expect(gb.attacksTracker[2 + 3 * gb.size]).toBe(true);
+test('receiveAttack hits and sinks a ship', () => {
+  gb.placeShip(4, 6); // ship1 (X-axis)
+  gb.placeShip(3, 4, 4, true); // ship2 Y-axis
+
+  // ship2
+  expect(gb.receiveAttack(3, 6).numHits).toBe(1);
+  expect(gb.receiveAttack(3, 7).numHits).toBe(2);
+  expect(gb.receiveAttack(3, 5).isSunk()).toBe(false);
+  expect(gb.receiveAttack(3, 4).numHits).toBe(4);
+
+  // ship2 sunk
+  expect(gb.receiveAttack(3, 5).isSunk()).toBe(true);
+  expect(gb.receiveAttack(3, 7).numHits).toBe(4);
+});
+
+test('receiveAttack misses a ship', () => {
+  gb.placeShip(4, 6); // ship1 (X-axis)
+  gb.placeShip(3, 4, 4, true); // ship2 Y-axis
+
+  expect(gb.receiveAttack(2, 6)).toBe(false);
+  expect(gb.attacksTracker[2 + 6 * gb.size]).toBe(true);
+
+  expect(gb.missedAttacksTracker[0]).toBe(2 + 6 * gb.size);
+});
+
+test('receiveAttack hits and sinks all ships', () => {
+  gb.placeShip(4, 6); // ship1 (X-axis)
+  gb.placeShip(3, 4, 4, true); // ship2 Y-axis
+
+  expect(gb.allShipsSunk).toBe(false);
+
+  // ship1
+  expect(gb.receiveAttack(4, 6).numHits).toBe(1);
+  expect(gb.receiveAttack(6, 6).isSunk()).toBe(false);
+  expect(gb.receiveAttack(5, 6).numHits).toBe(3);
+
+  expect(gb.allShipsSunk).toBe(false);
+
+  // ship2
+  expect(gb.receiveAttack(3, 6).numHits).toBe(1);
+  expect(gb.receiveAttack(3, 7).numHits).toBe(2);
+  expect(gb.receiveAttack(3, 5).isSunk()).toBe(false);
+  expect(gb.receiveAttack(3, 4).numHits).toBe(4);
+
+  expect(gb.allShipsSunk).toBe(true);
 });
