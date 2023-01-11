@@ -1,70 +1,74 @@
 const { Ship } = require('./Ship');
 
 const Gameboard = () => {
-  const SIZE = 8; // 8x8 = 64
-  const coords = [];
-  const squares = [];
+  // to check validity when trying to place a new Ship instance
+  let _placedShips1DIndices = [];
 
-  // _setSquaresEmpty()
-  (() => {
+  const SIZE = 8; // 8x8 = 64
+  const ships = []; // array of placed Ship instances
+  const coordsOfPlacedShips = [];
+  const placedShipsTracker = []; // 1D array of gameboard
+  const attacksTracker = []; // 1D array of gameboard
+
+  const _setArrayFalse = (array) => {
     for (let i = 0; i < SIZE * SIZE; i += 1) {
-      squares.push(false);
+      array.push(false);
     }
-  })();
-  let _squaresIndices = []; // 1D array of gameboard
+  };
+  _setArrayFalse(placedShipsTracker); // _setShipsTrackerFalse():
+  _setArrayFalse(attacksTracker); // _setAttacksTrackerFalse();
 
   const _checkValidPlace = (oneDArrayIdx) => {
-    if (_squaresIndices.indexOf(oneDArrayIdx) === -1) {
+    if (_placedShips1DIndices.indexOf(oneDArrayIdx) === -1) {
       return true;
     }
     return false;
   };
 
   const placeShip = (startX, startY, length = 3, orientation = false) => {
-    const ship = Ship(length);
+    const _ship = Ship(length);
 
     // if orientation = false => X axis || else Y axis.
-    const endX = orientation ? startX : startX + ship.length - 1;
-    const endY = orientation ? startY + ship.length - 1 : startY;
+    const _endX = orientation ? startX : startX + _ship.length - 1;
+    const _endY = orientation ? startY + _ship.length - 1 : startY;
 
-    const init = orientation ? startY : startX;
-    const limit = orientation ? endY : endX;
-    let valid = true;
+    const _init = orientation ? startY : startX;
+    const _limit = orientation ? _endY : _endX;
+    let _validCoords = true;
 
-    const _tmpSquaresIndices = [];
-    for (let i = 0; i < limit - init + 1; i += 1) {
-      if (startX >= SIZE || startY >= SIZE || endX >= SIZE || endY >= SIZE) {
-        valid = false;
+    const _tmpPlacedShipsTracker = [];
+    for (let i = 0; i < _limit - _init + 1; i += 1) {
+      if (startX >= SIZE || startY >= SIZE || _endX >= SIZE || _endY >= SIZE) {
+        _validCoords = false;
         break;
       }
 
-      const oneDIdx = orientation
+      const _oneDIdx = orientation
         ? startX + (startY + i) * SIZE
         : startX + i + startY * SIZE;
 
-      if (_checkValidPlace(oneDIdx)) {
-        squares[oneDIdx] = true;
-        _tmpSquaresIndices.push(oneDIdx);
+      if (_checkValidPlace(_oneDIdx)) {
+        placedShipsTracker[_oneDIdx] = true;
+        _tmpPlacedShipsTracker.push(_oneDIdx);
       } else {
-        valid = false;
+        _validCoords = false;
         break;
       }
-
-      // console.log(startX, startY, oneDIdx);
     }
-    // console.log(squares, _tmpSquaresIndices);
 
-    if (valid) {
-      _squaresIndices = _squaresIndices.concat(_tmpSquaresIndices);
+    if (_validCoords) {
+      _placedShips1DIndices = _placedShips1DIndices.concat(
+        _tmpPlacedShipsTracker
+      );
 
-      coords.push([
+      ships.push(_ship);
+
+      coordsOfPlacedShips.push([
         [startX, startY],
-        [endX, endY],
+        [_endX, _endY],
       ]);
-      // console.log('final:1', _squaresIndices);
     } else {
-      coords.push(['Invalid']);
-      // console.log('final:2', _squaresIndices);
+      coordsOfPlacedShips.push(['Invalid']);
     }
   };
 
@@ -72,11 +76,14 @@ const Gameboard = () => {
     get size() {
       return SIZE;
     },
-    get coords() {
-      return coords;
+    get coordsOfPlacedShips() {
+      return coordsOfPlacedShips;
     },
-    get squares() {
-      return squares;
+    get placedShipsTracker() {
+      return placedShipsTracker;
+    },
+    get ships() {
+      return ships;
     },
     placeShip,
   };
