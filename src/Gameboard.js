@@ -9,6 +9,10 @@ const Gameboard = () => {
   const coordsOfPlacedShips = [];
   const placedShipsTracker = []; // 1D array of gameboard
   const attacksTracker = []; // 1D array of gameboard
+  const missedAttacksTracker = [];
+
+  const sunkShips = [];
+  let allShipsSunk = false;
 
   const _setArrayFalse = (array) => {
     for (let i = 0; i < SIZE * SIZE; i += 1) {
@@ -72,7 +76,7 @@ const Gameboard = () => {
       placedShipsTracker[idx] = true;
     });
 
-    ships.push(_ship);
+    ships.push({ ship: _ship, pos: _validIdxsForUnplacedShips });
 
     coordsOfPlacedShips.push([
       [startX, startY],
@@ -82,8 +86,45 @@ const Gameboard = () => {
     return true;
   };
 
+  const _searchForShipWithIdx = (idx) =>
+    ships.filter((ship) => {
+      if (ship.pos.indexOf(idx) !== -1) {
+        return ship;
+      }
+      return false;
+    });
+
   const receiveAttack = (x, y) => {
-    attacksTracker[x + y * SIZE] = true;
+    const idx = x + y * SIZE;
+
+    if (_validGBSquare(x, y)) {
+      attacksTracker[idx] = true;
+
+      if (placedShipsTracker[idx]) {
+        // find ship with the idx specified & send hit signal
+        const retShip = _searchForShipWithIdx(idx)[0].ship;
+
+        if (retShip) {
+          retShip.hit();
+
+          if (retShip.isSunk()) {
+            sunkShips.push(retShip);
+
+            if (sunkShips.length === ships.length) {
+              allShipsSunk = true;
+            }
+          }
+        }
+
+        return retShip;
+      }
+
+      // set as miss (default)
+      missedAttacksTracker.push(idx);
+      return false;
+    }
+
+    return false;
   };
 
   return {
@@ -101,6 +142,12 @@ const Gameboard = () => {
     },
     get attacksTracker() {
       return attacksTracker;
+    },
+    get missedAttacksTracker() {
+      return missedAttacksTracker;
+    },
+    get allShipsSunk() {
+      return allShipsSunk;
     },
     placeShip,
     receiveAttack,
