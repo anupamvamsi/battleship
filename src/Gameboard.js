@@ -1,5 +1,3 @@
-const { Ship } = require('./Ship');
-
 const Gameboard = () => {
   // to check validity when trying to place a new Ship instance
   let _placedShipsIdxs = [];
@@ -37,12 +35,30 @@ const Gameboard = () => {
     return false;
   };
 
-  const placeShip = (startX, startY, shipLength = 3, orientation = false) => {
-    const _ship = Ship(shipLength);
+  // If ship is found (it implies it has already been placed
+  // on the gameboard), return true
+  const _alreadyPlacedShip = (shipToCheck) => {
+    let shipFound = false;
+
+    ships.forEach((s) => {
+      if (s.ship === shipToCheck) {
+        shipFound = true;
+        return true;
+      }
+      return false;
+    });
+
+    return shipFound;
+  };
+
+  const placeShip = (ship, startX, startY, orientation = false) => {
+    if (_alreadyPlacedShip(ship)) {
+      return false; // same ship cannot be placed again
+    }
 
     // If orientation === false => X axis || else Y axis.
-    const _endX = orientation ? startX : startX + _ship.length - 1;
-    const _endY = orientation ? startY + _ship.length - 1 : startY;
+    const _endX = orientation ? startX : startX + ship.length - 1;
+    const _endY = orientation ? startY + ship.length - 1 : startY;
 
     const _validIdxsForUnplacedShips = [];
 
@@ -54,7 +70,7 @@ const Gameboard = () => {
     // Based on the 2-D start / end coordinates above, determine
     // the list of (1-D) indices the ship would occupy in the
     // placedShipsTracker 1-D array of length <SIZE * SIZE>.
-    for (let i = 0; i < shipLength; i += 1) {
+    for (let i = 0; i < ship.length; i += 1) {
       // Calculate the 1-D index based on the orientation
       const _shipIdx = orientation
         ? startX + (startY + i) * SIZE
@@ -76,7 +92,7 @@ const Gameboard = () => {
       placedShipsTracker[idx] = true;
     });
 
-    ships.push({ ship: _ship, pos: _validIdxsForUnplacedShips });
+    ships.push({ ship, pos: _validIdxsForUnplacedShips });
 
     coordsOfPlacedShips.push([
       [startX, startY],
