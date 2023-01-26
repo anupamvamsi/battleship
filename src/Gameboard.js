@@ -4,9 +4,14 @@ const Gameboard = () => {
 
   const SIZE = 8; // 8x8 = 64
   const ships = []; // array of placed Ship instances
+
+  // start / end coords in (x, y) format, of placed ships
   const coordsOfPlacedShips = [];
-  const placedShipsTracker = []; // 1D array of gameboard
-  const attacksTracker = []; // 1D array of gameboard
+  // gameboard where only idxs of placed ships are 'true', rest are 'false'.
+  const placedShipsTracker = [];
+  // gameboard where only idxs of attacks with receiveAttack (successful or missed) are tracked.
+  const attacksTracker = [];
+  // only idxs of missed attacks with receiveAttack are stored.
   const missedAttacksTracker = [];
 
   const sunkShips = [];
@@ -113,12 +118,21 @@ const Gameboard = () => {
   const receiveAttack = (x, y) => {
     const idx = x + y * SIZE;
 
-    if (_validGBSquare(x, y)) {
+    // check for valid coord + whether or not it is already attacked
+    if (_validGBSquare(x, y) && !attacksTracker[idx]) {
       attacksTracker[idx] = true;
 
+      // check for ship placement at idx
       if (placedShipsTracker[idx]) {
         // find ship with the idx specified & send hit signal
         const retShip = _searchForShipWithIdx(idx)[0].ship;
+
+        // possibly a redundant check!
+        // check immediately if the ship exists and is already sunk
+        if (retShip.isSunk()) {
+          // if ship is already sunk, receiveAttack fails
+          return false;
+        }
 
         if (retShip) {
           retShip.hit();
@@ -130,12 +144,15 @@ const Gameboard = () => {
               allShipsSunk = true;
             }
           }
+        } else {
+          return false; // retShip was not found
         }
 
-        return retShip;
+        // return retShip; // can be enabled and used with "// old tests"
+        return true;
       }
 
-      // set as miss (default)
+      // no ship at (x, y), i.e., 'idx', so set as miss (default)
       missedAttacksTracker.push(idx);
       return false;
     }
@@ -161,6 +178,9 @@ const Gameboard = () => {
     },
     get missedAttacksTracker() {
       return missedAttacksTracker;
+    },
+    get sunkShips() {
+      return sunkShips;
     },
     get allShipsSunk() {
       return allShipsSunk;
