@@ -1,7 +1,7 @@
 const { Gameboard } = require('../src/Gameboard');
 const { Ship } = require('../src/Ship');
 
-describe('Gameboard', () => {
+describe('Gameboard tests', () => {
   let gb;
   let s1L3;
   let s2L4;

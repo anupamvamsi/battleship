@@ -1,24 +1,27 @@
 const { Ship } = require('../src/Ship');
 
-let ship;
-beforeEach(() => {
-  ship = Ship(3);
-});
+describe('Ship tests', () => {
+  let ship;
 
-test('Check ship length', () => {
-  // unnecessary test.
-  expect(ship.length).toBe(3);
-});
+  beforeEach(() => {
+    ship = Ship(3);
+  });
 
-test('Did the ship sink?', () => {
-  ship.hit();
-  ship.hit();
+  test('Check ship length', () => {
+    // unnecessary test.
+    expect(ship.length).toBe(3);
+  });
 
-  expect(ship.isSunk()).toBe(false);
+  test('Did the ship sink?', () => {
+    ship.hit();
+    ship.hit();
 
-  ship.hit();
-  expect(ship.isSunk()).toBe(true);
+    expect(ship.isSunk()).toBe(false);
 
-  ship.hit();
-  expect(ship.isSunk()).toBe(true);
+    ship.hit();
+    expect(ship.isSunk()).toBe(true);
+
+    ship.hit();
+    expect(ship.isSunk()).toBe(true);
+  });
 });
