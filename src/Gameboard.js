@@ -126,13 +126,7 @@ const Gameboard = () => {
       if (placedShipsTracker[idx]) {
         // find ship with the idx specified & send hit signal
         const retShip = _searchForShipWithIdx(idx)[0].ship;
-
-        // possibly a redundant check!
-        // check immediately if the ship exists and is already sunk
-        if (retShip.isSunk()) {
-          // if ship is already sunk, receiveAttack fails
-          return false;
-        }
+        // console.log('len (', x, ',', y, ')', retShip, retShip.length);
 
         if (retShip) {
           retShip.hit();
