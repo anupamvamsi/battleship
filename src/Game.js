@@ -17,6 +17,18 @@ const Game = () => {
   let prevTurn = p2;
   let currTurn = p1;
 
+  const manualSetup = () => {
+    p1.gameboard.placeShip(s1L2, 1, 1, true);
+    p1.gameboard.placeShip(s2L2, 4, 5);
+    p1.gameboard.placeShip(s3L3, 4, 1);
+    p1.gameboard.placeShip(s4L5, 2, 3, true);
+
+    p2.gameboard.placeShip(s1L2, 3, 2);
+    p2.gameboard.placeShip(s2L2, 6, 3, true);
+    p2.gameboard.placeShip(s3L3, 0, 3, true);
+    p2.gameboard.placeShip(s4L5, 2, 6);
+  };
+
   const loop = () => {
     // 128 is the total number of squares for both players
     for (let i = 0; i < 128; i += 1) {
@@ -117,6 +129,7 @@ const Game = () => {
     set currTurn(player) {
       currTurn = player;
     },
+    manualSetup,
     loop,
   };
 };

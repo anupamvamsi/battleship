@@ -6,15 +6,7 @@ const GameDOM = () => {
   const _dom = DOM();
 
   const setupShips = () => {
-    _game.p1.gameboard.placeShip(_game.s1L2, 1, 1, true);
-    _game.p1.gameboard.placeShip(_game.s2L2, 4, 5);
-    _game.p1.gameboard.placeShip(_game.s3L3, 4, 1);
-    _game.p1.gameboard.placeShip(_game.s4L5, 2, 3, true);
-
-    _game.p2.gameboard.placeShip(_game.s1L2, 3, 2);
-    _game.p2.gameboard.placeShip(_game.s2L2, 6, 3, true);
-    _game.p2.gameboard.placeShip(_game.s3L3, 0, 3, true);
-    _game.p2.gameboard.placeShip(_game.s4L5, 2, 6);
+    _game.manualSetup();
   };
 
   const renderGameboards = () => {

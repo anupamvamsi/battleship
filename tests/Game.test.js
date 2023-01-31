@@ -6,15 +6,7 @@ describe('Game loop', () => {
   beforeEach(() => {
     game = Game();
 
-    game.p1.gameboard.placeShip(game.s1L2, 1, 1, true);
-    game.p1.gameboard.placeShip(game.s2L2, 4, 5);
-    game.p1.gameboard.placeShip(game.s3L3, 4, 1);
-    game.p1.gameboard.placeShip(game.s4L5, 2, 3, true);
-
-    game.p2.gameboard.placeShip(game.s1L2, 3, 2);
-    game.p2.gameboard.placeShip(game.s2L2, 6, 3, true);
-    game.p2.gameboard.placeShip(game.s3L3, 0, 3, true);
-    game.p2.gameboard.placeShip(game.s4L5, 2, 6);
+    game.manualSetup();
   });
 
   test('Setup game', () => {
