@@ -3,8 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- prevent stupid favicon get error -->
+    <link rel="shortcut icon" href="#" />
+    <!-- prevent stupid favicon get error -->
     <title><%= htmlWebpackPlugin.options.title%></title>
   </head>
 
-  <body></body>
+  <body>
+    <div class="container">
+      <div class="title">battleship</div>
+      <div class="boards-container">
+        <!-- player -->
+        <div class="board-container">
+          <div class="player-name">you</div>
+          <div class="board" id="p1-gb">
+            <!-- multiple divs in this -->
+          </div>
+          <div class="ships-container">
+            <!-- dynamically bring in ships -->
+          </div>
+        </div>
+
+        <!-- computer -->
+        <div class="board-container">
+          <div class="player-name">computer</div>
+          <div class="board" id="p2-gb">
+            <!-- multiple divs in this -->
+          </div>
+          <div class="ships-container">
+            <!-- dynamically bring in ships -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
