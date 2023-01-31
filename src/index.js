@@ -1,3 +1,6 @@
+require('../styles/index.css');
+require('../styles/gameboard.css');
+
 const { DOM } = require('./Dom');
 const { Game } = require('./Game');
 

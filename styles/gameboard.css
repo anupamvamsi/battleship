@@ -1,0 +1,45 @@
+:root {
+  --numSquares: 8;
+  --boardSize: 32em;
+  /* --boardBorderSize: 0.2em; */
+}
+
+.boards-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: row wrap;
+  gap: 2em;
+
+  padding: 2em;
+
+  color: whitesmoke;
+}
+
+.player-name {
+  font-weight: bold;
+}
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+
+  /* width: calc(var(--boardSize) + 2 * var(--boardBorderSize));
+  height: calc(var(--boardSize) + 2 * var(--boardBorderSize)); */
+  width: var(--boardSize);
+  height: var(--boardSize);
+
+  background-color: blue;
+}
+
+.gb-square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: calc(var(--boardSize) / var(--numSquares));
+  min-height: calc(var(--boardSize) / var(--numSquares));
+
+  background-color: lightseagreen;
+  border: 0.01em greenyellow solid;
+}
