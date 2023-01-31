@@ -18,6 +18,7 @@
 
 .player-name {
   font-weight: bold;
+  padding: 0.5em 0;
 }
 
 .board {
@@ -40,6 +41,5 @@
   min-width: calc(var(--boardSize) / var(--numSquares));
   min-height: calc(var(--boardSize) / var(--numSquares));
 
-  background-color: lightseagreen;
-  border: 0.01em greenyellow solid;
+  border: 0.01em darkblue solid;
 }
