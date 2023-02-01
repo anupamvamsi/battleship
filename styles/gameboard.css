@@ -43,3 +43,8 @@
 
   border: 0.01em darkblue solid;
 }
+
+#p2-gb > .gb-square:hover {
+  cursor: pointer;
+  background-color: rgb(37, 37, 255);
+}
