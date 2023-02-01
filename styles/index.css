@@ -33,8 +33,13 @@ body {
   display: flex;
 }
 
-.ship > pre {
+pre {
   margin: 0;
+}
+
+.ship > a {
+  color: white;
+  text-decoration: none;
 }
 
 div.title {
