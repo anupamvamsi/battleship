@@ -24,65 +24,66 @@ const GameDOM = () => {
   /// /////////////////////////////////////////////////////////////////////////
 
   const _getGBpX = (num) => document.getElementById(`p${num}-gb`);
+  const _determineGB = (num) => {
+    if (num === 1) {
+      return _gbP1;
+    }
+    return _gbP2;
+  };
 
   const _gbP1dom = _getGBpX(1);
   const _gbP2dom = _getGBpX(2);
 
   const _receiveAttackDOM = (e) => {
-    const clickedSquare = e.target;
-    const allSquaresArray = Array.from(clickedSquare.parentNode.children);
-    const idxOfClickedSquare = allSquaresArray.indexOf(clickedSquare);
-    const yCoord = Math.floor(idxOfClickedSquare / _size);
-    const xCoord = idxOfClickedSquare % _size;
+    const _clickedSquare = e.target;
+    const _boardOfClickedSquare = _clickedSquare.parentNode;
+    const _allSquaresArray = Array.from(_clickedSquare.parentNode.children);
+    const _idxOfClickedSquare = _allSquaresArray.indexOf(_clickedSquare);
+    const _yCoord = Math.floor(_idxOfClickedSquare / _size);
+    const _xCoord = _idxOfClickedSquare % _size;
 
     console.log(
-      clickedSquare,
-      allSquaresArray,
-      idxOfClickedSquare,
+      _clickedSquare,
+      _allSquaresArray,
+      _idxOfClickedSquare,
       '(',
-      xCoord,
-      yCoord,
+      _xCoord,
+      _yCoord,
       ')'
     );
 
-    if (_gbP2dom === clickedSquare.parentNode) {
-      console.log('p2');
-      const isHit = _gbP2.receiveAttack(xCoord, yCoord);
-      console.log(
-        _gbP2.attacksTracker[idxOfClickedSquare],
-        _gbP2.missedAttacksTracker
-      );
-      console.log(_shipsP2);
+    const _boardID = Number(_boardOfClickedSquare.dataset.boardId);
+    const _gbOfClickedSquare = _determineGB(_boardID);
 
-      if (isHit) {
-        clickedSquare.textContent = '✖';
-        clickedSquare.classList.add('hit');
-      } else {
-        clickedSquare.textContent = '•';
-        clickedSquare.classList.add('clicked');
-      }
+    const _isHit = _gbOfClickedSquare.receiveAttack(_xCoord, _yCoord);
+    console.log(
+      _gbOfClickedSquare.attacksTracker[_idxOfClickedSquare],
+      _gbOfClickedSquare.missedAttacksTracker
+    );
+    console.log(_gbOfClickedSquare.ships);
 
-      clickedSquare.removeEventListener('click', _receiveAttackDOM);
+    if (_isHit) {
+      _clickedSquare.textContent = '✖';
+      _clickedSquare.classList.add('hit');
+    } else {
+      _clickedSquare.textContent = '•';
+      _clickedSquare.classList.add('clicked');
     }
 
-    // for the situation of two-player mode being
-    // enabled in the future
-    if (_gbP1dom === clickedSquare.parentNode) {
-      console.log('p1');
-    }
+    _clickedSquare.removeEventListener('click', _receiveAttackDOM);
   };
 
   const _createSquare = (boardNum) => {
-    const square = document.createElement('div');
-    square.classList.add('gb-square');
+    const _square = document.createElement('div');
+    _square.classList.add('gb-square');
 
     // you can remove the boardNum condition and add the
     // event listener for all squares instead of only board2 (computer)
     if (boardNum === 2) {
-      square.addEventListener('click', _receiveAttackDOM);
+      _square.addEventListener('click', _receiveAttackDOM);
     }
 
-    return square;
+    return _square;
   };
 
   /// /////////////////////////////////////////////////////////////////////////
