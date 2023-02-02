@@ -20,7 +20,7 @@ const GameDOM = () => {
   // DOM-Methods //////////////////////////////////////////////////////////////
   /// /////////////////////////////////////////////////////////////////////////
 
-  const _getGBpX = (num) => document.getElementById(`p${num}-gb`);
+  const getGBpX = (num, doc = document) => doc.getElementById(`p${num}-gb`);
   const _determineGB = (num) => {
     if (num === 1) {
       return _gbP1;
@@ -28,8 +28,8 @@ const GameDOM = () => {
     return _gbP2;
   };
 
-  const _gbP1dom = _getGBpX(1);
-  const _gbP2dom = _getGBpX(2);
+  const _gbP1dom = getGBpX(1);
+  const _gbP2dom = getGBpX(2);
 
   const _receiveAttackDOM = (e) => {
     const _clickedSquare = e.target;
@@ -87,17 +87,18 @@ const GameDOM = () => {
   // DOM-Method users /////////////////////////////////////////////////////////
   /// /////////////////////////////////////////////////////////////////////////
 
-  const renderGameboards = () => {
+  const renderGameboards = (gbP1dom = _gbP1dom, gbP2dom = _gbP2dom) => {
     console.log(_size, _shipsP1, _size, _shipsP2);
 
     for (let i = 0; i < _size * _size; i += 1) {
-      _gbP1dom.appendChild(_createSquare(1));
-      _gbP2dom.appendChild(_createSquare(2));
+      gbP1dom.appendChild(_createSquare(1));
+      gbP2dom.appendChild(_createSquare(2));
     }
   };
 
   return {
     setupShips,
+    getGBpX,
     renderGameboards,
   };
 };
