@@ -47,7 +47,24 @@ const GameDOM = () => {
 
     if (_gbP2dom === clickedSquare.parentNode) {
       console.log('p2');
+      const isHit = _gbP2.receiveAttack(xCoord, yCoord);
+      console.log(
+        _gbP2.attacksTracker[idxOfClickedSquare],
+        _gbP2.missedAttacksTracker
+      );
+      console.log(_shipsP2);
+
+      if (isHit) {
+        clickedSquare.textContent = '✖';
+        clickedSquare.classList.add('hit');
+      } else {
+        clickedSquare.textContent = '•';
+        clickedSquare.classList.add('clicked');
+      }
+
+      clickedSquare.removeEventListener('click', _receiveAttackDOM);
     }
+
     // for the situation of two-player mode being
     // enabled in the future
     if (_gbP1dom === clickedSquare.parentNode) {
@@ -81,21 +98,13 @@ const GameDOM = () => {
     }
   };
 
-  const attackBoardDOM = () => {
-    const _p2PlacedShips = _gbP2.placedShipsTracker;
-    console.log(_p2PlacedShips);
-
-    console.log(_gbP2dom.children);
-  };
-
   return {
     setupShips,
     renderGameboards,
-    attackBoardDOM,
   };
 };
 
+module.exports = { GameDOM };
 const gameDOM = GameDOM();
 gameDOM.setupShips();
 gameDOM.renderGameboards();
-gameDOM.attackBoardDOM();
