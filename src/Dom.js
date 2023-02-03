@@ -12,6 +12,12 @@ const GameDOM = () => {
   const _shipsP2 = _gbP2.ships;
   const _size = _gbP1.size;
 
+  _gbP1.isPlayerTurn = true;
+  _gbP2.isPlayerTurn = false;
+
+  document.getElementById('p1-gb').style.pointerEvents = 'none';
+  document.getElementById('p2-gb').style.pointerEvents = 'auto';
+
   const setupShips = () => {
     _game.manualSetup();
   };
@@ -30,6 +36,8 @@ const GameDOM = () => {
 
   const _gbP1dom = getGBpX(1);
   const _gbP2dom = getGBpX(2);
+
+  let _turnDeterminer = null; // this is to prevent no-use-before-define "error"
 
   const _receiveAttackDOM = (e) => {
     const _clickedSquare = e.target;
@@ -52,14 +60,14 @@ const GameDOM = () => {
     const _boardID = Number(_boardOfClickedSquare.dataset.boardId);
     const _gbOfClickedSquare = _determineGB(_boardID);
 
-    const _isHit = _gbOfClickedSquare.receiveAttack(_xCoord, _yCoord);
+    const isHit = _gbOfClickedSquare.receiveAttack(_xCoord, _yCoord);
     console.log(
       _gbOfClickedSquare.attacksTracker[_idxOfClickedSquare],
       _gbOfClickedSquare.missedAttacksTracker
     );
     console.log(_gbOfClickedSquare.ships);
 
-    if (_isHit) {
+    if (isHit) {
       _clickedSquare.textContent = '✖';
       _clickedSquare.classList.add('hit');
     } else {
@@ -67,7 +75,29 @@ const GameDOM = () => {
       _clickedSquare.classList.add('clicked');
     }
 
-    _clickedSquare.removeEventListener('click', _receiveAttackDOM);
+    _clickedSquare.removeEventListener('click', _turnDeterminer);
+
+    return isHit;
+  };
+
+  _turnDeterminer = (e) => {
+    if (_gbP1.isPlayerTurn) {
+      const hit = _receiveAttackDOM(e);
+      if (!hit) {
+        _gbP1.isPlayerTurn = false;
+        _gbP2.isPlayerTurn = true;
+        document.getElementById('p2-gb').style.pointerEvents = 'none';
+        document.getElementById('p1-gb').style.pointerEvents = 'auto';
+      }
+    } else if (_gbP2.isPlayerTurn) {
+      const isHit = _receiveAttackDOM(e);
+      if (!isHit) {
+        _gbP2.isPlayerTurn = false;
+        _gbP1.isPlayerTurn = true;
+        document.getElementById('p1-gb').style.pointerEvents = 'none';
+        document.getElementById('p2-gb').style.pointerEvents = 'auto';
+      }
+    }
   };
 
   const _createSquare = (boardNum) => {
@@ -76,8 +106,9 @@ const GameDOM = () => {
 
     // you can remove the boardNum condition and add the
     // event listener for all squares instead of only board2 (computer)
-    if (boardNum === 2) {
-      _square.addEventListener('click', _receiveAttackDOM);
+    // for 1-player mode, make it equal 2
+    if (boardNum) {
+      _square.addEventListener('click', _turnDeterminer);
     }
 
     return _square;
