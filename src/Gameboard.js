@@ -17,6 +17,8 @@ const Gameboard = () => {
   const sunkShips = [];
   let allShipsSunk = false;
 
+  let isPlayerTurn = false;
+
   const _setArrayFalse = (array) => {
     for (let i = 0; i < SIZE * SIZE; i += 1) {
       array.push(false);
@@ -178,6 +180,12 @@ const Gameboard = () => {
     },
     get allShipsSunk() {
       return allShipsSunk;
+    },
+    get isPlayerTurn() {
+      return isPlayerTurn;
+    },
+    set isPlayerTurn(turn) {
+      isPlayerTurn = turn;
     },
     placeShip,
     receiveAttack,
