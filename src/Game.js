@@ -9,24 +9,30 @@ const Game = () => {
   p2.enemy = p1;
 
   // 12 squares out of 64 = 18.75%
-  const s1L2 = Ship(2);
-  const s2L2 = Ship(2);
-  const s3L3 = Ship(3);
-  const s4L5 = Ship(5);
+  // pX = playerX, shipX sX (ship number), Lx = Length of ship X
+  const p1s1L2 = Ship(2);
+  const p1s2L2 = Ship(2);
+  const p1s3L3 = Ship(3);
+  const p1s4L5 = Ship(5);
+
+  const p2s1L2 = Ship(2);
+  const p2s2L2 = Ship(2);
+  const p2s3L3 = Ship(3);
+  const p2s4L5 = Ship(5);
 
   let prevTurn = p2;
   let currTurn = p1;
 
   const manualSetup = () => {
-    p1.gameboard.placeShip(s1L2, 1, 1, true);
-    p1.gameboard.placeShip(s2L2, 4, 5);
-    p1.gameboard.placeShip(s3L3, 4, 1);
-    p1.gameboard.placeShip(s4L5, 2, 3, true);
+    p1.gameboard.placeShip(p1s1L2, 1, 1, true);
+    p1.gameboard.placeShip(p1s2L2, 4, 5);
+    p1.gameboard.placeShip(p1s3L3, 4, 1);
+    p1.gameboard.placeShip(p1s4L5, 2, 3, true);
 
-    p2.gameboard.placeShip(s1L2, 3, 2);
-    p2.gameboard.placeShip(s2L2, 6, 3, true);
-    p2.gameboard.placeShip(s3L3, 0, 3, true);
-    p2.gameboard.placeShip(s4L5, 2, 6);
+    p2.gameboard.placeShip(p2s1L2, 3, 2);
+    p2.gameboard.placeShip(p2s2L2, 6, 3, true);
+    p2.gameboard.placeShip(p2s3L3, 0, 3, true);
+    p2.gameboard.placeShip(p2s4L5, 2, 6);
   };
 
   const loop = () => {
@@ -107,10 +113,16 @@ const Game = () => {
   };
 
   return {
-    s1L2,
-    s2L2,
-    s3L3,
-    s4L5,
+    p1s1L2,
+    p1s2L2,
+    p1s3L3,
+    p1s4L5,
+
+    p2s1L2,
+    p2s2L2,
+    p2s3L3,
+    p2s4L5,
+
     get p1() {
       return p1;
     },

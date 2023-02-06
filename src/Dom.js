@@ -75,6 +75,9 @@ const GameDOM = () => {
       _clickedSquare.classList.add('clicked');
     }
 
+    // Remove event listener on already clicked squares to prevent
+    // changes in the textContent from crosses to dots or any such
+    // unwanted changes
     _clickedSquare.removeEventListener('click', _turnDeterminer);
 
     return isHit;
@@ -83,6 +86,13 @@ const GameDOM = () => {
   _turnDeterminer = (e) => {
     if (_gbP1.isPlayerTurn) {
       const hit = _receiveAttackDOM(e);
+
+      if (hit && _gbP2.allShipsSunk) {
+        // gameWon
+        console.log('p1 won! you won!');
+      }
+
+      // if there is a hit on a ship, give extra turns to the player
       if (!hit) {
         _gbP1.isPlayerTurn = false;
         _gbP2.isPlayerTurn = true;
@@ -90,8 +100,14 @@ const GameDOM = () => {
         document.getElementById('p1-gb').style.pointerEvents = 'auto';
       }
     } else if (_gbP2.isPlayerTurn) {
-      const isHit = _receiveAttackDOM(e);
-      if (!isHit) {
+      const hit = _receiveAttackDOM(e);
+
+      if (hit && _gbP1.allShipsSunk) {
+        // gameWon
+        console.log('p2 won! you lost!');
+      }
+
+      if (!hit) {
         _gbP2.isPlayerTurn = false;
         _gbP1.isPlayerTurn = true;
         document.getElementById('p1-gb').style.pointerEvents = 'none';
