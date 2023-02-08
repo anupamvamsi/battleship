@@ -12,15 +12,27 @@ const GameDOM = () => {
   const _shipsP2 = _gbP2.ships;
   const _size = _gbP1.size;
 
-  // default values
-  _gbP1.isPlayerTurn = true;
-  _gbP2.isPlayerTurn = false;
-  document.getElementById('p1-gb').style.pointerEvents = 'none';
-  document.getElementById('p2-gb').style.pointerEvents = 'auto';
-
   const setupShips = () => {
     _game.manualSetup();
   };
+
+  const _determinePlayerAndEnemy = () => {
+    const playerNum = _gbP1.isPlayerTurn ? 1 : 2;
+    const enemyNum = playerNum === 1 ? 2 : 1;
+
+    return { playerNum, enemyNum };
+  };
+
+  const _toggleGBActive = () => {
+    const { playerNum, enemyNum } = _determinePlayerAndEnemy();
+    document.getElementById(`p${playerNum}-gb`).style.pointerEvents = 'none';
+    document.getElementById(`p${enemyNum}-gb`).style.pointerEvents = 'auto';
+  };
+
+  // default values
+  _gbP1.isPlayerTurn = true;
+  _gbP2.isPlayerTurn = false;
+  _toggleGBActive();
 
   /// /////////////////////////////////////////////////////////////////////////
   // DOM-Methods //////////////////////////////////////////////////////////////
@@ -84,10 +96,9 @@ const GameDOM = () => {
   };
 
   const _executePlayersTurn = (e) => {
-    const playerNum = _gbP1.isPlayerTurn ? 1 : 2;
+    const { playerNum } = _determinePlayerAndEnemy();
     const gbOfPlayer = playerNum === 1 ? _gbP1 : _gbP2;
     const gbOfEnemy = gbOfPlayer === _gbP1 ? _gbP2 : _gbP1;
-    const enemyNum = playerNum === 1 ? 2 : 1;
 
     const hit = _receiveAttackDOM(e);
 
@@ -101,8 +112,7 @@ const GameDOM = () => {
     if (!hit) {
       gbOfPlayer.isPlayerTurn = false;
       gbOfEnemy.isPlayerTurn = true;
-      document.getElementById(`p${enemyNum}-gb`).style.pointerEvents = 'none';
-      document.getElementById(`p${playerNum}-gb`).style.pointerEvents = 'auto';
+      _toggleGBActive();
     }
   };
 
