@@ -84,35 +84,45 @@ const GameDOM = () => {
   };
 
   _turnDeterminer = (e) => {
-    if (_gbP1.isPlayerTurn) {
-      const hit = _receiveAttackDOM(e);
+    if (_game.gameState === _game.GAME_START) {
+      if (_gbP1.isPlayerTurn) {
+        const hit = _receiveAttackDOM(e);
 
-      if (hit && _gbP2.allShipsSunk) {
-        // gameWon
-        console.log('p1 won! you won!');
-      }
+        if (hit && _gbP2.allShipsSunk) {
+          // gameWon
+          console.log('p1 won! you won!');
+          _game.gameState = _game.GAME_END;
+          _game.winMessage = 'Player 1 wins the game!';
+        }
 
-      // if there is a hit on a ship, give extra turns to the player
-      if (!hit) {
-        _gbP1.isPlayerTurn = false;
-        _gbP2.isPlayerTurn = true;
-        document.getElementById('p2-gb').style.pointerEvents = 'none';
-        document.getElementById('p1-gb').style.pointerEvents = 'auto';
-      }
-    } else if (_gbP2.isPlayerTurn) {
-      const hit = _receiveAttackDOM(e);
+        // if there is a hit on a ship, give extra turns to the player
+        if (!hit) {
+          _gbP1.isPlayerTurn = false;
+          _gbP2.isPlayerTurn = true;
+          document.getElementById('p2-gb').style.pointerEvents = 'none';
+          document.getElementById('p1-gb').style.pointerEvents = 'auto';
+        }
+      } else if (_gbP2.isPlayerTurn) {
+        const hit = _receiveAttackDOM(e);
 
-      if (hit && _gbP1.allShipsSunk) {
-        // gameWon
-        console.log('p2 won! you lost!');
-      }
+        if (hit && _gbP1.allShipsSunk) {
+          // gameWon
+          console.log('p2 won! you lost!');
+          _game.gameState = _game.GAME_END;
+          _game.winMessage = 'You lost! Player 2 (Computer) wins the game!';
+        }
 
-      if (!hit) {
-        _gbP2.isPlayerTurn = false;
-        _gbP1.isPlayerTurn = true;
-        document.getElementById('p1-gb').style.pointerEvents = 'none';
-        document.getElementById('p2-gb').style.pointerEvents = 'auto';
+        if (!hit) {
+          _gbP2.isPlayerTurn = false;
+          _gbP1.isPlayerTurn = true;
+          document.getElementById('p1-gb').style.pointerEvents = 'none';
+          document.getElementById('p2-gb').style.pointerEvents = 'auto';
+        }
       }
+    }
+
+    if (_game.gameState === _game.GAME_END) {
+      console.log('Game has ended!');
     }
   };
 

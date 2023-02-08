@@ -2,6 +2,11 @@ const { Player } = require('./Player');
 const { Ship } = require('./Ship');
 
 const Game = () => {
+  const GAME_START = true;
+  const GAME_END = false;
+  let gameState = GAME_START;
+  let winMessage = '';
+
   const p1 = Player();
   const p2 = Player(); // computer
 
@@ -33,6 +38,23 @@ const Game = () => {
   };
 
   return {
+    GAME_START,
+    GAME_END,
+
+    get gameState() {
+      return gameState;
+    },
+    set gameState(state) {
+      gameState = state;
+    },
+
+    get winMessage() {
+      return winMessage;
+    },
+    set winMessage(msg) {
+      winMessage = msg;
+    },
+
     p1s1L2,
     p1s2L2,
     p1s3L3,
