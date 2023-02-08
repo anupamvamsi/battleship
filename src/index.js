@@ -6,3 +6,4 @@ require('../styles/gameboard.css');
 const gameDOM = GameDOM();
 gameDOM.setupShips();
 gameDOM.renderGameboards();
+gameDOM.renderShipIndicators();

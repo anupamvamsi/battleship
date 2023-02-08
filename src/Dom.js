@@ -39,6 +39,9 @@ const GameDOM = () => {
   /// /////////////////////////////////////////////////////////////////////////
 
   const getGBpX = (num, doc = document) => doc.getElementById(`p${num}-gb`);
+  // SIC - ship indicator container
+  const getSICdiv = (num) => document.getElementById(`sic-${num}`);
+
   const _determineGB = (num) => {
     if (num === 1) {
       return _gbP1;
@@ -128,9 +131,14 @@ const GameDOM = () => {
     }
   };
 
-  const _createSquare = (boardNum) => {
+  const _createSquare = (className) => {
     const _square = document.createElement('div');
-    _square.classList.add('gb-square');
+    _square.classList.add(className);
+    return _square;
+  };
+
+  const _createBoardSquare = (boardNum) => {
+    const _square = _createSquare('gb-square');
 
     // you can remove the boardNum condition and add the
     // event listener for all squares instead of only board2 (computer)
@@ -150,8 +158,33 @@ const GameDOM = () => {
     console.log(_size, _shipsP1, _size, _shipsP2);
 
     for (let i = 0; i < _size * _size; i += 1) {
-      gbP1dom.appendChild(_createSquare(1));
-      gbP2dom.appendChild(_createSquare(2));
+      gbP1dom.appendChild(_createBoardSquare(1));
+      gbP2dom.appendChild(_createBoardSquare(2));
+    }
+  };
+
+  const renderShipIndicators = () => {
+    const _sc1 = getSICdiv(1);
+    const _sc2 = getSICdiv(2);
+
+    console.log(_sc1, _sc2);
+
+    for (let i = 0; i < _shipsP1.length; i += 1) {
+      const _shipInd = _createSquare('ship-indicator');
+      for (let j = 0; j < _shipsP1[i].ship.length; j += 1) {
+        _shipInd.appendChild(_createSquare('si-square'));
+      }
+
+      _sc1.appendChild(_shipInd);
+    }
+
+    for (let i = 0; i < _shipsP2.length; i += 1) {
+      const _shipInd = _createSquare('ship-indicator');
+      for (let j = 0; j < _shipsP2[i].ship.length; j += 1) {
+        _shipInd.appendChild(_createSquare('si-square'));
+      }
+
+      _sc2.appendChild(_shipInd);
     }
   };
 
@@ -159,6 +192,7 @@ const GameDOM = () => {
     setupShips,
     getGBpX,
     renderGameboards,
+    renderShipIndicators,
   };
 };
 

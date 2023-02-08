@@ -16,6 +16,13 @@
   color: whitesmoke;
 }
 
+.board-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
 .player-name {
   font-weight: bold;
   padding: 0.5em 0;
@@ -50,13 +57,50 @@
 }
 
 .clicked {
-  background-color: rgb(37, 37, 255);
+  background-color: rgb(74, 74, 255);
+}
+#p2-gb > .clicked:hover {
+  background-color: rgb(74, 74, 255);
 }
 
 .hit {
-  background-color: rgba(255, 98, 129, 0.3);
+  background-color: rgba(255, 98, 129, 0.6);
+}
+#p2-gb > .gb-square:hover.hit {
+  background-color: rgba(255, 98, 129, 0.6);
 }
 
-#p2-gb > .gb-square:hover.hit {
-  background-color: rgba(255, 98, 129, 0.3);
+.ships-indicator-container:before {
+  content: 'ships';
+}
+.ships-indicator-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em;
+
+  margin-top: 1em;
+}
+
+.ship-indicator {
+  display: flex;
+
+  max-width: fit-content;
+}
+
+.si-square {
+  width: 2em;
+  height: 2em;
+  border: white solid 0.1em;
+  border-right: none;
+  background-color: black;
+  border: 0.1em darkblue solid;
+  background-color: blue;
+}
+.si-square:last-child {
+  border-right: white solid 0.1em;
+  border-right: 0.1em darkblue solid;
+}
+.si-square.clicked {
+  background-color: rgba(255, 98, 129, 0.6);
 }
