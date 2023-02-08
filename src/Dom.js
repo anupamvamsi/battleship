@@ -12,9 +12,9 @@ const GameDOM = () => {
   const _shipsP2 = _gbP2.ships;
   const _size = _gbP1.size;
 
+  // default values
   _gbP1.isPlayerTurn = true;
   _gbP2.isPlayerTurn = false;
-
   document.getElementById('p1-gb').style.pointerEvents = 'none';
   document.getElementById('p2-gb').style.pointerEvents = 'auto';
 
@@ -83,46 +83,38 @@ const GameDOM = () => {
     return isHit;
   };
 
+  const _executePlayersTurn = (e) => {
+    const playerNum = _gbP1.isPlayerTurn ? 1 : 2;
+    const gbOfPlayer = playerNum === 1 ? _gbP1 : _gbP2;
+    const gbOfEnemy = gbOfPlayer === _gbP1 ? _gbP2 : _gbP1;
+    const enemyNum = playerNum === 1 ? 2 : 1;
+
+    const hit = _receiveAttackDOM(e);
+
+    if (gbOfEnemy.allShipsSunk) {
+      console.log(`p${playerNum} won!`);
+      _game.gameState = _game.GAME_END;
+      _game.winMessage = `Player ${playerNum} wins the game!`;
+    }
+
+    // if there is a hit on a ship, give extra turns to the player
+    if (!hit) {
+      gbOfPlayer.isPlayerTurn = false;
+      gbOfEnemy.isPlayerTurn = true;
+      document.getElementById(`p${enemyNum}-gb`).style.pointerEvents = 'none';
+      document.getElementById(`p${playerNum}-gb`).style.pointerEvents = 'auto';
+    }
+  };
+
   _turnDeterminer = (e) => {
     if (_game.gameState === _game.GAME_START) {
-      if (_gbP1.isPlayerTurn) {
-        const hit = _receiveAttackDOM(e);
-
-        if (hit && _gbP2.allShipsSunk) {
-          // gameWon
-          console.log('p1 won! you won!');
-          _game.gameState = _game.GAME_END;
-          _game.winMessage = 'Player 1 wins the game!';
-        }
-
-        // if there is a hit on a ship, give extra turns to the player
-        if (!hit) {
-          _gbP1.isPlayerTurn = false;
-          _gbP2.isPlayerTurn = true;
-          document.getElementById('p2-gb').style.pointerEvents = 'none';
-          document.getElementById('p1-gb').style.pointerEvents = 'auto';
-        }
-      } else if (_gbP2.isPlayerTurn) {
-        const hit = _receiveAttackDOM(e);
-
-        if (hit && _gbP1.allShipsSunk) {
-          // gameWon
-          console.log('p2 won! you lost!');
-          _game.gameState = _game.GAME_END;
-          _game.winMessage = 'You lost! Player 2 (Computer) wins the game!';
-        }
-
-        if (!hit) {
-          _gbP2.isPlayerTurn = false;
-          _gbP1.isPlayerTurn = true;
-          document.getElementById('p1-gb').style.pointerEvents = 'none';
-          document.getElementById('p2-gb').style.pointerEvents = 'auto';
-        }
-      }
+      _executePlayersTurn(e);
     }
 
     if (_game.gameState === _game.GAME_END) {
       console.log('Game has ended!');
+      document.getElementById('p1-gb').style.pointerEvents = 'none';
+      document.getElementById('p2-gb').style.pointerEvents = 'none';
     }
   };
 
