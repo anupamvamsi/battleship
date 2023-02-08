@@ -4,7 +4,7 @@
   "description": "Project 17 (TheOdinProject)",
   "private": "true",
   "scripts": {
-    "test": "jest --watchAll --verbose",
+    "test": "jest --watchAll --verbose --detectOpenHandles",
     "watch": "webpack --watch",
     "start": "webpack serve --open-app-name dfirefox",
     "build": "webpack",
