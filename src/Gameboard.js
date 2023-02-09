@@ -109,7 +109,7 @@ const Gameboard = () => {
     return true;
   };
 
-  const _searchForShipWithIdx = (idx) =>
+  const searchForShipWithIdx = (idx) =>
     ships.filter((ship) => {
       if (ship.pos.indexOf(idx) !== -1) {
         return ship;
@@ -127,7 +127,7 @@ const Gameboard = () => {
       // check for ship placement at idx
       if (placedShipsTracker[idx]) {
         // find ship with the idx specified & send hit signal
-        const retShip = _searchForShipWithIdx(idx)[0].ship;
+        const retShip = searchForShipWithIdx(idx)[0].ship;
         // console.log('len (', x, ',', y, ')', retShip, retShip.length);
 
         if (retShip) {
@@ -189,6 +189,7 @@ const Gameboard = () => {
     },
     placeShip,
     receiveAttack,
+    searchForShipWithIdx,
   };
 };
 

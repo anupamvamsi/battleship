@@ -83,6 +83,16 @@ const GameDOM = () => {
     console.log(_gbOfClickedSquare.ships);
 
     if (isHit) {
+      const hitShip =
+        _gbOfClickedSquare.searchForShipWithIdx(_idxOfClickedSquare)[0];
+      const _hitShipIdx = _gbOfClickedSquare.ships.indexOf(hitShip);
+      const _shipIndicatorCntr = getSICdiv(_boardID);
+      const _shipIndicator = _shipIndicatorCntr.children[_hitShipIdx];
+      const _sIndSquareIdx = hitShip.ship.numHits - 1;
+      const _shipIndicatorSquare = _shipIndicator.children[_sIndSquareIdx];
+      _shipIndicatorSquare.classList.add('clicked');
+      _shipIndicatorSquare.textContent = '✖';
+
       _clickedSquare.textContent = '✖';
       _clickedSquare.classList.add('hit');
     } else {
@@ -164,10 +174,10 @@ const GameDOM = () => {
   };
 
   const renderShipIndicators = () => {
-    const _sc1 = getSICdiv(1);
-    const _sc2 = getSICdiv(2);
+    const _sic1 = getSICdiv(1);
+    const _sic2 = getSICdiv(2);
 
-    console.log(_sc1, _sc2);
+    console.log(_sic1, _sic2);
 
     for (let i = 0; i < _shipsP1.length; i += 1) {
       const _shipInd = _createSquare('ship-indicator');
@@ -175,7 +185,7 @@ const GameDOM = () => {
         _shipInd.appendChild(_createSquare('si-square'));
       }
 
-      _sc1.appendChild(_shipInd);
+      _sic1.appendChild(_shipInd);
     }
 
     for (let i = 0; i < _shipsP2.length; i += 1) {
@@ -184,7 +194,7 @@ const GameDOM = () => {
         _shipInd.appendChild(_createSquare('si-square'));
       }
 
-      _sc2.appendChild(_shipInd);
+      _sic2.appendChild(_shipInd);
     }
   };
 
