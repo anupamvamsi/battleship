@@ -89,18 +89,22 @@
 }
 
 .si-square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   width: 2em;
   height: 2em;
+
   border: white solid 0.1em;
   border-right: none;
-  background-color: black;
+
   border: 0.1em darkblue solid;
   background-color: blue;
 }
 .si-square:last-child {
-  border-right: white solid 0.1em;
   border-right: 0.1em darkblue solid;
 }
 .si-square.clicked {
-  background-color: rgba(255, 98, 129, 0.6);
+  background-color: rgba(72, 151, 233, 0.51);
 }
