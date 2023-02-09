@@ -54,6 +54,28 @@ const GameDOM = () => {
 
   let _turnDeterminer = null; // this is to prevent no-use-before-define "error"
 
+  const _setClassAndContent = (item, className, content) => {
+    item.classList.add(className);
+    // https://stackoverflow.com/a/35637900/9087363
+    item.textContent = content; // eslint-disable-line no-param-reassign
+  };
+
+  const _setShipIndicatorHit = (gb, idx, id) => {
+    const _hitShip = gb.searchForShipWithIdx(idx)[0];
+    const _hitShipIdx = gb.ships.indexOf(_hitShip);
+
+    const _shipIndicatorCntr = getSICdiv(id);
+    const _shipIndicator = _shipIndicatorCntr.children[_hitShipIdx];
+
+    // The index of the square to be highlighted as "hit"
+    // The number of hits minus 1 would give the index of the square,
+    // since the index starts from 0.
+    const _indicatorSqrIdx = _hitShip.ship.numHits - 1;
+    const _shipIndicatorSquare = _shipIndicator.children[_indicatorSqrIdx];
+
+    _setClassAndContent(_shipIndicatorSquare, 'clicked', '✖');
+  };
+
   const _receiveAttackDOM = (e) => {
     const _clickedSquare = e.target;
     const _boardOfClickedSquare = _clickedSquare.parentNode;
@@ -83,21 +105,10 @@ const GameDOM = () => {
     console.log(_gbOfClickedSquare.ships);
 
     if (isHit) {
-      const hitShip =
-        _gbOfClickedSquare.searchForShipWithIdx(_idxOfClickedSquare)[0];
-      const _hitShipIdx = _gbOfClickedSquare.ships.indexOf(hitShip);
-      const _shipIndicatorCntr = getSICdiv(_boardID);
-      const _shipIndicator = _shipIndicatorCntr.children[_hitShipIdx];
-      const _sIndSquareIdx = hitShip.ship.numHits - 1;
-      const _shipIndicatorSquare = _shipIndicator.children[_sIndSquareIdx];
-      _shipIndicatorSquare.classList.add('clicked');
-      _shipIndicatorSquare.textContent = '✖';
-
-      _clickedSquare.textContent = '✖';
-      _clickedSquare.classList.add('hit');
+      _setShipIndicatorHit(_gbOfClickedSquare, _idxOfClickedSquare, _boardID);
+      _setClassAndContent(_clickedSquare, 'hit', '✖');
     } else {
-      _clickedSquare.textContent = '•';
-      _clickedSquare.classList.add('clicked');
+      _setClassAndContent(_clickedSquare, 'clicked', '•');
     }
 
     // Remove event listener on already clicked squares to prevent
