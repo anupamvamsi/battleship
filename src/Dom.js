@@ -1,4 +1,5 @@
 const { Game } = require('./Game');
+const { Modal } = require('./Modal');
 const { Random } = require('./Random');
 
 const GameDOM = () => {
@@ -12,6 +13,8 @@ const GameDOM = () => {
   const _gbP2 = _game.p2.gameboard;
   const _shipsP2 = _gbP2.ships;
   const _size = _gbP1.size;
+
+  const playAgainBtn = document.getElementById('play-again');
 
   const setupShips = () => {
     _game.manualSetup();
@@ -102,7 +105,7 @@ const GameDOM = () => {
       const _idxToAttack = _selectRandomSquareToAttack(_gb);
 
       _clickedSquare = _gbDOM.children[_idxToAttack];
-      console.log(_clickedSquare, _idxToAttack);
+      // console.log(_clickedSquare, _idxToAttack);
     } else {
       _clickedSquare = e.target;
     }
@@ -115,25 +118,25 @@ const GameDOM = () => {
     const _yCoord = Math.floor(_idxOfClickedSquare / _size);
     const _xCoord = _idxOfClickedSquare % _size;
 
-    console.log(
-      _clickedSquare,
-      _allSquaresArray,
-      _idxOfClickedSquare,
-      '(',
-      _xCoord,
-      _yCoord,
-      ')'
-    );
+    // console.log(
+    //   _clickedSquare,
+    //   _allSquaresArray,
+    //   _idxOfClickedSquare,
+    //   '(',
+    //   _xCoord,
+    //   _yCoord,
+    //   ')'
+    // );
 
     const _boardID = Number(_boardOfClickedSquare.dataset.boardId);
     const _gbOfClickedSquare = _determineGB(_boardID);
 
     const isHit = _gbOfClickedSquare.receiveAttack(_xCoord, _yCoord);
-    console.log(
-      _gbOfClickedSquare.attacksTracker[_idxOfClickedSquare],
-      _gbOfClickedSquare.missedAttacksTracker
-    );
-    console.log(_gbOfClickedSquare.ships);
+    // console.log(
+    //   _gbOfClickedSquare.attacksTracker[_idxOfClickedSquare],
+    //   _gbOfClickedSquare.missedAttacksTracker
+    // );
+    // console.log(_gbOfClickedSquare.ships);
 
     if (isHit) {
       _setShipIndicatorHit(_gbOfClickedSquare, _idxOfClickedSquare, _boardID);
@@ -163,9 +166,10 @@ const GameDOM = () => {
     }
 
     if (gbOfEnemy.allShipsSunk) {
-      console.log(`p${playerNum} won!`);
+      // console.log(`p${playerNum} won!`);
       _game.gameState = _game.GAME_END;
       _game.winMessage = `Player ${playerNum} wins the game!`;
+      return;
     }
 
     // 1. If there is a hit on a ship, give extra turns to the player
@@ -189,9 +193,17 @@ const GameDOM = () => {
     }
 
     if (_game.gameState === _game.GAME_END) {
-      console.log('Game has ended!');
+      // console.log('Game has ended!');
       document.getElementById('p1-gb').style.pointerEvents = 'none';
       document.getElementById('p2-gb').style.pointerEvents = 'none';
+
+      // modal stuff
+      document.getElementById('modal-p').textContent = _game.winMessage;
+      playAgainBtn.addEventListener('click', Modal.closeModal);
+      playAgainBtn.addEventListener('click', () => window.location.reload());
+      window.addEventListener('click', Modal.closeModalWindow);
+      window.addEventListener('keydown', Modal.closeModalWindow);
+      Modal.openModal();
     }
   };
 
@@ -219,7 +231,7 @@ const GameDOM = () => {
   /// /////////////////////////////////////////////////////////////////////////
 
   const renderGameboards = (gbP1dom = _gbP1dom, gbP2dom = _gbP2dom) => {
-    console.log(_size, _shipsP1, _size, _shipsP2);
+    // console.log(_size, _shipsP1, _size, _shipsP2);
 
     for (let i = 0; i < _size * _size; i += 1) {
       gbP1dom.appendChild(_createBoardSquare(1));
@@ -231,7 +243,7 @@ const GameDOM = () => {
     const _sic1 = getSICdiv(1);
     const _sic2 = getSICdiv(2);
 
-    console.log(_sic1, _sic2);
+    // console.log(_sic1, _sic2);
 
     for (let i = 0; i < _shipsP1.length; i += 1) {
       const _shipInd = _createSquare('ship-indicator');
