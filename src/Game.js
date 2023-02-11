@@ -9,6 +9,7 @@ const Game = () => {
 
   const p1 = Player();
   const p2 = Player(); // computer
+  p2.isAI = true;
 
   p1.enemy = p2;
   p2.enemy = p1;

@@ -3,6 +3,7 @@ const { Gameboard } = require('./Gameboard');
 const Player = () => {
   const gameboard = Gameboard();
   let enemy;
+  let isAI = false;
 
   return {
     get gameboard() {
@@ -13,6 +14,12 @@ const Player = () => {
     },
     set enemy(player) {
       enemy = player;
+    },
+    get isAI() {
+      return isAI;
+    },
+    set isAI(option) {
+      isAI = option;
     },
   };
 };

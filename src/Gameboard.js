@@ -18,6 +18,7 @@ const Gameboard = () => {
   let allShipsSunk = false;
 
   let isPlayerTurn = false;
+  let sunkShipPrevHit = false;
 
   const _setArrayFalse = (array) => {
     for (let i = 0; i < SIZE * SIZE; i += 1) {
@@ -119,6 +120,7 @@ const Gameboard = () => {
 
   const receiveAttack = (x, y) => {
     const idx = x + y * SIZE;
+    sunkShipPrevHit = false;
 
     // check for valid coord + whether or not it is already attacked
     if (_validGBSquare(x, y) && !attacksTracker[idx]) {
@@ -135,6 +137,7 @@ const Gameboard = () => {
 
           if (retShip.isSunk()) {
             sunkShips.push(retShip);
+            sunkShipPrevHit = true;
 
             if (sunkShips.length === ships.length) {
               allShipsSunk = true;
@@ -186,6 +189,12 @@ const Gameboard = () => {
     },
     set isPlayerTurn(turn) {
       isPlayerTurn = turn;
+    },
+    get sunkShipPrevHit() {
+      return sunkShipPrevHit;
+    },
+    set sunkShipPrevHit(outcome) {
+      sunkShipPrevHit = outcome;
     },
     placeShip,
     receiveAttack,
