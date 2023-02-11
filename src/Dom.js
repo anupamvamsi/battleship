@@ -1,4 +1,5 @@
 const { Game } = require('./Game');
+const { Random } = require('./Random');
 
 const GameDOM = () => {
   /// /////////////////////////////////////////////////////////////////////////
@@ -16,7 +17,7 @@ const GameDOM = () => {
     _game.manualSetup();
   };
 
-  const _determinePlayerAndEnemy = () => {
+  const _determinePlayerAndEnemyNumber = () => {
     const playerNum = _gbP1.isPlayerTurn ? 1 : 2;
     const enemyNum = playerNum === 1 ? 2 : 1;
 
@@ -24,7 +25,7 @@ const GameDOM = () => {
   };
 
   const _toggleGBActive = () => {
-    const { playerNum, enemyNum } = _determinePlayerAndEnemy();
+    const { playerNum, enemyNum } = _determinePlayerAndEnemyNumber();
     document.getElementById(`p${playerNum}-gb`).style.pointerEvents = 'none';
     document.getElementById(`p${enemyNum}-gb`).style.pointerEvents = 'auto';
   };
@@ -76,11 +77,41 @@ const GameDOM = () => {
     _setClassAndContent(_shipIndicatorSquare, 'clicked', '✖');
   };
 
-  const _receiveAttackDOM = (e) => {
-    const _clickedSquare = e.target;
+  const _selectRandomSquareToAttack = (gameboard) => {
+    let _idxToAttack = Random.getRandomInt(0, 63);
+
+    // if location was already attacked, choose a different location
+    if (gameboard.attacksTracker[_idxToAttack]) {
+      _idxToAttack = _selectRandomSquareToAttack(gameboard);
+    }
+    return _idxToAttack;
+  };
+
+  // Only use <<numOfPlayerToAutoAttack>> when it is the computer player's
+  // turn to attack.
+  // The value of <<numOfPlayerToAutoAttack>> will be the playerNumber of the
+  // computer player's enemy.
+  // For example, if player2 is the computer player, and player1 is the enemy
+  // player of player2: numOfPlayerToAutoAttack = 1.
+  const _receiveAttackDOM = (e, numOfPlayerToAutoAttack) => {
+    let _clickedSquare;
+
+    if (numOfPlayerToAutoAttack) {
+      const _gb = _determineGB(numOfPlayerToAutoAttack);
+      const _gbDOM = getGBpX(numOfPlayerToAutoAttack);
+      const _idxToAttack = _selectRandomSquareToAttack(_gb);
+
+      _clickedSquare = _gbDOM.children[_idxToAttack];
+      console.log(_clickedSquare, _idxToAttack);
+    } else {
+      _clickedSquare = e.target;
+    }
+
     const _boardOfClickedSquare = _clickedSquare.parentNode;
     const _allSquaresArray = Array.from(_clickedSquare.parentNode.children);
     const _idxOfClickedSquare = _allSquaresArray.indexOf(_clickedSquare);
+
+    // split idx into x and y coords
     const _yCoord = Math.floor(_idxOfClickedSquare / _size);
     const _xCoord = _idxOfClickedSquare % _size;
 
@@ -120,11 +151,16 @@ const GameDOM = () => {
   };
 
   const _executePlayersTurn = (e) => {
-    const { playerNum } = _determinePlayerAndEnemy();
+    const { playerNum } = _determinePlayerAndEnemyNumber();
     const gbOfPlayer = playerNum === 1 ? _gbP1 : _gbP2;
     const gbOfEnemy = gbOfPlayer === _gbP1 ? _gbP2 : _gbP1;
 
-    const hit = _receiveAttackDOM(e);
+    let hit;
+    if (gbOfPlayer === _gbP2) {
+      hit = _receiveAttackDOM(e, 1);
+    } else {
+      hit = _receiveAttackDOM(e);
+    }
 
     if (gbOfEnemy.allShipsSunk) {
       console.log(`p${playerNum} won!`);
@@ -132,11 +168,18 @@ const GameDOM = () => {
       _game.winMessage = `Player ${playerNum} wins the game!`;
     }
 
-    // if there is a hit on a ship, give extra turns to the player
-    if (!hit) {
+    // 1. If there is a hit on a ship, give extra turns to the player
+    // 2. If a ship was sunk because of the current turn's attack,
+    // the enemy player gets their turn back (to prevent a killing
+    // spree of all ships at once by either the AI or a player)
+    if (!hit || gbOfEnemy.sunkShipPrevHit) {
       gbOfPlayer.isPlayerTurn = false;
       gbOfEnemy.isPlayerTurn = true;
       _toggleGBActive();
+    }
+
+    if (_gbP2.isPlayerTurn) {
+      setTimeout(_executePlayersTurn, 500);
     }
   };
 
@@ -164,7 +207,7 @@ const GameDOM = () => {
     // you can remove the boardNum condition and add the
     // event listener for all squares instead of only board2 (computer)
     // for 1-player mode, make it equal 2
-    if (boardNum) {
+    if (boardNum === 2) {
       _square.addEventListener('click', _turnDeterminer);
     }
 
