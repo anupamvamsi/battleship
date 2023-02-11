@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- prevent stupid favicon get error -->
+    <link rel="shortcut icon" href="#" />
+    <!-- prevent stupid favicon get error -->
+    <title>Battleship</title>
+  <script defer src="index.bundle.js"></script><link href="main.css" rel="stylesheet"></head>
+
+  <body>
+    <div class="container">
+      <div class="title">
+        <h1 class="title">
+          <span class="ship">
+            <!-- ascii art inspiration: -->
+            <!-- https://www.asciiart.eu/vehicles/navy -->
+            <a href="https://www.asciiart.eu/vehicles/navy">
+              <pre>
+                     ___
+                    /__/
+                 __/___
+           _____/______\____
+   _______/_____/_______\___\_____
+   \              &lt; &lt; &lt;          /
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        </pre
+              >
+            </a>
+          </span>
+          battleship
+        </h1>
+      </div>
+      <div id="modal">
+        <div id="modal-content">
+          <p id="modal-p"></p>
+          <button type="button" id="play-again">Retry?</button>
+        </div>
+      </div>
+      <div class="boards-container">
+        <!-- player -->
+        <div class="board-container">
+          <div class="player-name">you (player 1)</div>
+          <div class="board" id="p1-gb" data-board-id="1">
+            <!-- multiple divs in this -->
+          </div>
+          <div id="sic-1" class="ships-indicator-container" data-board-id="1">
+            <!-- dynamically bring in ships -->
+          </div>
+        </div>
+
+        <!-- computer -->
+        <div class="board-container">
+          <div class="player-name">computer (player 2)</div>
+          <div class="board" id="p2-gb" data-board-id="2">
+            <!-- multiple divs in this -->
+          </div>
+          <div id="sic-2" class="ships-indicator-container" data-board-id="2">
+            <!-- dynamically bring in ships -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
